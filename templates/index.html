@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+    <link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet"/>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <div class="container container-fluid">
+        <div class="row">
+            <div class="model-list col-8">
+                <h2>Models</h2>
+                <table id="models" class="display table table-striped" style="width=100%">
+                    <thead>
+                        <tr>
+                            <th class="col-4">Filename</th>
+                            <th class="col-4">File Path</th>
+                            <th class="col-2">Download Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for model in models %}
+                            <tr>
+                                <th class="col-4"><a href="/model/{{model['id']}}">{{model["name"]}}</a></th>
+                                <th class="col-4">{{model["url"].split('/static/')[1]}}</th>
+                                <th class="col-2"><a href="{{model['url']}}" download="{{model['filename']}}">download</a></th>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="tag-list col-2">
+                <h2>Top Tags</h2>
+                    <div class="list-group">
+                    {% for tag in tags %}
+                        <a href="/search/['{{tag['id']}}']" type="button" class="list-group-item list-group-item-action">{{tag['name']}}</a>
+                    {% endfor %}
+                    </div>
+                <a href="{{tags_url}}">See all</a>
+            </div>
+        </div>
+        <p>Can't find your models here? Try using <a href="/search">full search</a>
+        <form method = "post">
+            <p><button type="submit" class="btn btn-primary">Load Models</button></p>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        let table = new DataTable('#models', {
+            searching: true
+        });
+    </script>
+{% endblock %}

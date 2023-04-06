@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Settings</h2>
+    <form method = "post">
+        <div class="form-group">
+            <label for="model_base_url">Base URL:</label>
+            <input type="text" class="form-control" name="model_base_url" value="{{current_url}}">
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+{% endblock %}

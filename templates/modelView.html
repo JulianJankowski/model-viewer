@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h2>{{model['name']}}</h2>
+        <div 
+            id="stl_cont"
+            style="width:500px;height:500px;margin:0 auto;">
+        </div>
+        <script src={{stl_viewer}}></script>
+        <script>
+            var stl_viewer=new StlViewer
+            (
+                document.getElementById("stl_cont"),
+                {
+                    bgcolor:"#20FAAC",
+                    models:
+                    [
+                        {filename:"{{model['url']}}"}
+                    ]
+                }
+            );
+        </script>
+        <form method = "post">
+            <p><select class="form-select form-select-lg" size="5" multiple name="tags">
+                {% for tag in tags %}
+                    <option value={{tag["id"]}}>{{tag['name']}}</option>
+                {% endfor %}
+            </select></p>
+            <p><input class="btn btn-success" type="submit" value="Assign Tag"/></p>
+        </form>
+        <h3>Tags</h3>
+        <ul class="list-group list-group-flush">
+            {% for tag in assignedTags %}
+                <li class="list-group-item">
+                    <form method = "post" action="/removeTag">
+                        <button class="btn btn-outline-danger btn-sm" type="submit" name="delete" value={{tag['Id']}}.{{model['id']}}>x</button> {{tag['name']}}
+                    </form>
+                </li>
+            {% endfor %}
+            
+        </ul>
+    </div>
+{% endblock %}

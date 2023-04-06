@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+<link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet"/>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+<div class="container container-fluid">
+    <div class="row">
+        <div class="tag-list">
+        <h2>Models</h2>
+        <form method='POST'>
+            <ul class="list-group list-group-horizontal">
+            {% for tag in tags.values() %}
+                <li class="list-group-item">
+                    <input class="form-check-input me-1" name='tags' type="checkbox" value={{tag['Id']}} id="secondCheckbox">
+                    <label class="form-check-label" for="secondCheckbox">{{tag['Name']}}</label>
+                </li>
+            {% endfor %}
+            </ul>
+            <button>Search</button>
+        <form>
+    </div>
+    <div class="row">
+        <div class="model-list">
+            <table id="models" class="display table table-striped" style="width=100%">
+                <thead>
+                <tr>
+                    <th class="col-4">Filename</th>
+                    <th class="col-4">File Path</th>
+                    <th class="col-2">Download Link</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for model in models.values() %}
+                    <tr>
+                    <th class="col-4"><a href="/model/{{model['id']}}">{{model["name"]}}</a></th>
+                    <th class="col-4">{{model["url"].split('/static/')[1]}}</th>
+                    <th class="col-2"><a href="{{model['url']}}" download="{{model['filename']}}">download</a></th>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    let table = new DataTable('#models', {
+        searching: true
+    });
+</script>
+{% endblock %}

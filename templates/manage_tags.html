@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Tags</h2>
+    
+    <ul class="list-group list-group-flush">
+    {% for tag in tags %}
+        <li class="list-group-item">
+            <form method = "post" action="/deleteTag">
+                <button class="btn btn-outline-danger btn-sm" type="submit" name="delete" value={{tag['Id']}}>x</button> {{tag['name']}}
+            </form>
+        </li>
+    {% endfor %}
+    </ul>
+    <form method = "post">
+        <p><input name="tagName" type = "text" /></p>
+        <p><input class="btn btn-primary" type ="submit" value="Create Tag"/></p>
+    </form>
+</div>
+{% endblock %}
