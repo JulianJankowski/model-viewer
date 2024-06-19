@@ -2,43 +2,101 @@
 
 {% block content %}
     <div class="container">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/modelView.css') }}">
+        <script src="{{ url_for('static', filename='scripts/three.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='scripts/webgl_Detector.js') }}"></script>
+        <script src="{{ url_for('static', filename='scripts/OrbitControls.js') }}"></script>
         <h2>{{model['name']}}</h2>
         <div 
             id="stl_cont"
-            style="width:500px;height:500px;margin:0 auto;">
+            style="width:100%;height:500px;margin:auto;padding:20px;">
         </div>
         <script src={{stl_viewer}}></script>
+        <script>
+            function load_prog(load_status, load_session)
+            {
+                var stlBox = document.getElementById("stl_cont")
+                stlBox.style.display = "none";
+                var loaded=0;
+                var total=0;
+                
+                //go over all models that are/were loaded
+                Object.keys(load_status).forEach(function(model_id)
+                {
+                    if (load_status[model_id].load_session==load_session) //need to make sure we're on the last loading session (not counting previous loaded models)
+                    {
+                        loaded+=load_status[model_id].loaded;
+                        total+=load_status[model_id].total;
+                        
+                        //set the relevant model's progress bar
+                        document.getElementById("pb"+model_id).value=load_status[model_id].loaded/load_status[model_id].total;
+                    }
+                });
+            }
+
+            function loadedCallback() {
+                var loadingBar = document.getElementById("loading-bar")
+                loadingBar.style.display = "none";
+
+                var spinner = document.getElementById("spinner")
+                spinner.style.display = "none";
+
+                var stlBox = document.getElementById("stl_cont")
+                stlBox.style.display = "block";
+            }
+        </script>
         <script>
             var stl_viewer=new StlViewer
             (
                 document.getElementById("stl_cont"),
                 {
-                    bgcolor:"#20FAAC",
+                    loading_progress_callback: load_prog,
+                    all_loaded_callback: loadedCallback,
                     models:
                     [
-                        {filename:"{{model['url']}}"}
+                        {
+                            id: 1,
+                            filename:"{{model['url']}}",
+                            rotationx: 3.14/2,
+                            rotationy:3.14
+                        }
                     ]
                 }
             );
+            stl_viewer.set_grid(true);
+            stl_viewer.set_bg_color('#E8E8E8');
         </script>
-        <form method = "post">
-            <p><select class="form-select form-select-lg" size="5" multiple name="tags">
-                {% for tag in tags %}
-                    <option value={{tag["id"]}}>{{tag['name']}}</option>
-                {% endfor %}
-            </select></p>
-            <p><input class="btn btn-success" type="submit" value="Assign Tag"/></p>
-        </form>
-        <h3>Tags</h3>
-        <ul class="list-group list-group-flush">
-            {% for tag in assignedTags %}
-                <li class="list-group-item">
-                    <form method = "post" action="/removeTag">
-                        <button class="btn btn-outline-danger btn-sm" type="submit" name="delete" value={{tag['Id']}}.{{model['id']}}>x</button> {{tag['name']}}
+        <div id="spinner" class="loader"></div> 
+        <div id="loading-bar">
+            '{{model['name']}}' loading progress:<br>
+            <progress id="pb1" value="0" max="1"></progress>
+        </div>
+        <div class="container" style="padding-top:50px;">
+            <div class="row align-items-start">
+                <div class="col">
+                    <form method = "post">
+                        <p><select class="form-select form-select-lg" size="5" multiple name="tags">
+                            {% for tag in tags %}
+                                <option value={{tag["id"]}}>{{tag['name']}}</option>
+                            {% endfor %}
+                        </select></p>
+                        <p><input class="btn btn-success" type="submit" value="Assign Tag"/></p>
                     </form>
-                </li>
-            {% endfor %}
-            
-        </ul>
+                </div>
+                <div class="col">
+                    <h3>Tags</h3>
+                    <ul class="list-group list-group-flush">
+                        {% for tag in assignedTags %}
+                            <li class="list-group-item">
+                                <form method = "post" action="/removeTag">
+                                    <button class="btn btn-outline-danger btn-sm" type="submit" name="delete" value={{tag['Id']}}.{{model['id']}}>x</button> {{tag['name']}}
+                                </form>
+                            </li>
+                        {% endfor %}
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

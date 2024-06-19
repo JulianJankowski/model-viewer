@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, redirect, request
 import sqlite3
 from DAO import load_models, save_tags, create_tag_assignments
+from formatter import format_url
 import json
 import ast
 
@@ -33,6 +34,7 @@ def home():
             model['name'] = databaseModel['name']
             model['url'] = url_for('static', filename=databaseModel['url'])
             model['filename'] = databaseModel['url'].split('/')[-1]
+            model['folder_path'] = format_url(model['url'])
             models.append(model)
 
         for databaseTag in databaseTags:
@@ -90,6 +92,7 @@ def singleView(ident):
         model['id'] = databaseModels[0]['id']
         model['name'] = databaseModels[0]['name']
         model['url'] = url_for('static', filename=databaseModels[0]['url'])
+        model['folder_path'] = format_url(model['url'])
         return render_template('modelView.html',
             stl_viewer=url_for('static', filename='scripts/stl_viewer.min.js'),
             search_url=url_for('search'),
@@ -164,6 +167,7 @@ def searchTags(tags):
         model['name'] = tagA['name']
         model['url'] = url_for('static', filename=tagA['url'])
         model['filename'] = tagA['url'].split('/')[-1]
+        model['folder_path'] = format_url(model['url'])
         if (model['url'] in foundModels):
             models[model['id']]['tags'] += ', ' + tags[tagA['tagId']]['Name']
             continue

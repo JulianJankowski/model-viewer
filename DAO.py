@@ -13,6 +13,7 @@ def load_models():
                 model = os.path.join(path, name)
                 dirmodels.append(model.split('static/')[1])
 
+    print(dirmodels)
     connection.row_factory = sqlite3.Row
     models = connection.execute('SELECT * FROM models').fetchall()
     databaseModels = []

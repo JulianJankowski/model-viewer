@@ -1,12 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
-<link href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" rel="stylesheet"/>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.css"/>
 
 <div class="container container-fluid">
     <div class="row">
@@ -21,7 +18,7 @@
                 </li>
             {% endfor %}
             </ul>
-            <button>Search</button>
+            <button class="btn btn-primary" style="margin:20px;">Search</button>
         <form>
     </div>
     <div class="row">
@@ -30,7 +27,7 @@
                 <thead>
                 <tr>
                     <th class="col-4">Filename</th>
-                    <th class="col-4">File Path</th>
+                    <th class="col-4">Folder Path</th>
                     <th class="col-2">Download Link</th>
                 </tr>
                 </thead>
@@ -38,7 +35,7 @@
                 {% for model in models.values() %}
                     <tr>
                     <th class="col-4"><a href="/model/{{model['id']}}">{{model["name"]}}</a></th>
-                    <th class="col-4">{{model["url"].split('/static/')[1]}}</th>
+                    <th class="col-4">{{model["folder_path"]}}</th>
                     <th class="col-2"><a href="{{model['url']}}" download="{{model['filename']}}">download</a></th>
                     </tr>
                 {% endfor %}
